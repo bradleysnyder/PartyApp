@@ -15,11 +15,12 @@ import android.widget.ImageView;
 
 import com.rdio.android.api.Rdio;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class PartyQueue extends ActionBarActivity {
 
-    private static final String TAG = "RdioAPIExample";
+    private static final String TAG = "PartyDJ";
 
     private MediaPlayer player;
 
@@ -61,6 +62,8 @@ public class PartyQueue extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_queue);
+
+        trackQueue = new LinkedList<Track>();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
