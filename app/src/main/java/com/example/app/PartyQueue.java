@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.ImageView;
 
+import com.firebase.client.Firebase;
 import com.rdio.android.api.Rdio;
 
 import java.util.LinkedList;
@@ -21,6 +22,10 @@ import java.util.Queue;
 public class PartyQueue extends ActionBarActivity {
 
     private static final String TAG = "PartyDJ";
+
+    private static final String FIREBASE_URL = "https://flickering-fire-2243.firebaseio.com/";
+
+    private Firebase firebase;
 
     private MediaPlayer player;
 
@@ -64,6 +69,8 @@ public class PartyQueue extends ActionBarActivity {
         setContentView(R.layout.activity_party_queue);
 
         trackQueue = new LinkedList<Track>();
+
+        firebase = new Firebase(FIREBASE_URL).child("Playlists");
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
