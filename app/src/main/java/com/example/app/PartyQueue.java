@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -65,11 +66,21 @@ public class PartyQueue extends ActionBarActivity {
 
         trackQueue = new LinkedList<Track>();
 
-        if (savedInstanceState == null) {
+       /* if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
+
         }
+        */
+        //if no instance of rdio exists like when the app is first opened
+        //but there shouldn't be
+        //seems like this check should be done in onResume() or onStart()
+        //if (rdio == NULL){
+        //}
+        SharedPreferences user = getPreferences(MODE_PRIVATE);
+        accessToken = user.getString(PREF_ACCESSTOKEN, null);
+
     }
 
 
