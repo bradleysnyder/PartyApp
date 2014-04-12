@@ -17,6 +17,7 @@ public class PartyQueue extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_queue);
+        Rdio rdio;
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
