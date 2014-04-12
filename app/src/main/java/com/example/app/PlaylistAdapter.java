@@ -1,7 +1,6 @@
 package com.example.app;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,22 +9,22 @@ import com.firebase.client.Query;
 /**
  * Created by Jacob on 4/12/14.
  */
-public class PlaylistAdapter extends FirebaseListAdapter<Track>{
+public class PlaylistAdapter extends FirebaseListAdapter<Playlist>{
     private String playlistName;
 
     public PlayListAdapter(Query ref, Activity activity, int layout, String username) {
-        super(ref, Track.class, layout, activity);
+        super(ref, Playlist.class, layout, activity);
         this.playlistName = username;
     }
 
     @Override
-    protected void populateView(View view, Track track) {
+    protected void populateView(View view, Playlist playlist) {
         // Map a Chat object to an entry in our listview
-        String owner = Playlist.getOwner();
-        String name = Track.getTrackName();
-        TextView artistText = (TextView)view.findViewById(R.id.artist);
+        String owner = playlist.getOwner();
+        String name = playlist.getName();
+        TextView artistText = (TextView)view.findViewById(R.id.name);
         artistText.setText(name + "by ");
         // If the message was sent by this user, color it differently
-        ((TextView)view.findViewById(R.id.)).setText(chat.getMessage());
+        ((TextView)view.findViewById(R.id.owner)).setText(owner);
     }
 }
