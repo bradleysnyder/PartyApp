@@ -1,6 +1,5 @@
 package com.example.app;
 
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -14,6 +13,7 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.ImageView;
 
+import com.firebase.client.Firebase;
 import com.rdio.android.api.Rdio;
 
 import java.util.LinkedList;
@@ -22,6 +22,10 @@ import java.util.Queue;
 public class PartyQueue extends ActionBarActivity {
 
     private static final String TAG = "PartyDJ";
+
+    private static final String FIREBASE_URL = "https://flickering-fire-2243.firebaseio.com/";
+
+    private Firebase firebase;
 
     private MediaPlayer player;
 
@@ -66,21 +70,13 @@ public class PartyQueue extends ActionBarActivity {
 
         trackQueue = new LinkedList<Track>();
 
-       /* if (savedInstanceState == null) {
+        firebase = new Firebase(FIREBASE_URL).child("Playlists");
+
+        if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
-
         }
-        */
-        //if no instance of rdio exists like when the app is first opened
-        //but there shouldn't be
-        //seems like this check should be done in onResume() or onStart()
-        //if (rdio == NULL){
-        //}
-        SharedPreferences user = getPreferences(MODE_PRIVATE);
-        accessToken = user.getString(PREF_ACCESSTOKEN, null);
-
     }
 
 
