@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,14 +11,56 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.ImageView;
+
+import com.rdio.android.api.Rdio;
+
+import java.util.Queue;
 
 public class PartyQueue extends ActionBarActivity {
+
+    private static final String TAG = "RdioAPIExample";
+
+    private MediaPlayer player;
+
+    private Queue<Track> trackQueue;
+
+    private static Rdio rdio;
+
+    private static final String appKey = "45zphqtyn4xb6zcusenp94q7";
+    private static final String appSecret = "WxvBq8GQHS";
+
+    private static String accessToken = null;
+    private static String accessTokenSecret = null;
+
+    private static final String PREF_ACCESSTOKEN = "prefs.accesstoken";
+    private static final String PREF_ACCESSTOKENSECRET = "prefs.accesstokensecret";
+
+    private static String collectionKey = null;
+
+    private ImageView albumArt;
+    private ImageView playPause;
+
+    private class Track {
+        public String key;
+        public String trackName;
+        public String artistName;
+        public String albumName;
+        public String albumArt;
+
+        public Track(String k, String name, String artist, String album, String uri) {
+            key = k;
+            trackName = name;
+            artistName = artist;
+            albumName = album;
+            albumArt = uri;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_queue);
-        Rdio rdio;
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
