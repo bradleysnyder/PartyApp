@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -13,10 +14,16 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.ImageView;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.GenericTypeIndicator;
+import com.firebase.client.Query;
 import com.rdio.android.api.Rdio;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 public class PartyQueue extends ActionBarActivity {
@@ -57,12 +64,66 @@ public class PartyQueue extends ActionBarActivity {
         trackQueue = new LinkedList<Track>();
 
         firebase = new Firebase(FIREBASE_URL).child("Playlists");
+        Query partylistQ = firebase.limit(100);
+        //give us the first 100 playlists in firebase
+        //we handle cases where new playlists are added as well as moved
+        //System.out.println(partylistQ);
+        partylistQ.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                GenericTypeIndicator<Map<String, String>> t = new GenericTypeIndicator<Map<String, String>>() {};
+                Map<String, String> ud = dataSnapshot.getValue(t);
+                System.out.println("User" + ud.get("user_id") + "said" + ud.get("text"));
 
-        if (savedInstanceState == null) {
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                GenericTypeIndicator<Map<String, String>> t = new GenericTypeIndicator<Map<String, String>>() {};
+                Map<String, String> ud = dataSnapshot.getValue(t);
+                System.out.println("Message" + ud.get("message") + " from user " + ud.get("user_id") + "should no longer be displayed");
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        
+
+        /*if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
-        }
+        } */
+        //don't have to check for null rdio I don't think
+        //that should be done in onPause() or onStart()
+        //check to see if user exists. If so, then get username and pass
+        SharedPreferences user = getPreferences(MODE_PRIVATE);
+        accessToken = user.getString(PREF_ACCESSTOKEN, null);
+        accessTokenSecret = user.getString(PREF_ACCESSTOKENSECRET, null);
+
+        //create new rdio instance
+        //rdio = new Rdio(appKey, appSecret, accessToken, accessTokenSecret, this, this);
+
+        //allow user to browse playlists online and only prompt for login info if they
+        //attempt to play the playlist or modify the playlist
+        //only prompt login screen if you try to listen or create a playlist
+        //check to make sure user exists
+        if (accessToken == null || accessTokenSecret == null){}
+
+
     }
 
 
