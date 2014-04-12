@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.firebase.client.GenericTypeIndicator;
 import com.firebase.client.Query;
 import com.rdio.android.api.Rdio;
 
+import java.io.Console;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -68,12 +70,25 @@ public class PartyQueue extends ActionBarActivity {
         //give us the first 100 playlists in firebase
         //we handle cases where new playlists are added as well as moved
         //System.out.println(partylistQ);
+
+        String t = firebase.getName();
+        System.out.println(t);
+        //still just prints out "Playlists"
+        //Firebase pl = firebase.child("Playlists/Tracks");
+        //String tra = pl.getName();
+        Log.d(t, t);
+        //Log.d(tra, tra);
+
+        //Track t = new Track("")
+        //Track t = dataSnapShot.getValue()
+        //partylistQ.once('value', function(dataSnapShot));
         partylistQ.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                GenericTypeIndicator<Map<String, String>> t = new GenericTypeIndicator<Map<String, String>>() {};
-                Map<String, String> ud = dataSnapshot.getValue(t);
-                System.out.println("User" + ud.get("user_id") + "said" + ud.get("text"));
+            public void onChildAdded(DataSnapshot ds, String s) {
+                Track tr = new Track("b", "brad", "b", "b", "b");
+                //Track ud = dataSnapshot.getValue(t);
+                //System.out.println("User" + ud.get("user_id") + "said" + ud.get("text"));
+                //System.out.println("hi");
 
             }
 
