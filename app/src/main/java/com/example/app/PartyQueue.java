@@ -59,6 +59,7 @@ public class PartyQueue extends ListActivity {
     private ImageView albumArt;
     private ImageView playPause;
 
+    private PlaylistAdapter playlistAdapter;
 
 
     @Override
@@ -69,7 +70,7 @@ public class PartyQueue extends ListActivity {
         trackQueue = new LinkedList<Track>();
 
         firebase = new Firebase(FIREBASE_URL).child("Playlists");
-        Query partylistQ = firebase.limit(100);
+        //Query partylistQ = firebase.limit(100);
         //give us the first 100 playlists in firebase
         //we handle cases where new playlists are added as well as moved
         //System.out.println(partylistQ);
@@ -77,7 +78,7 @@ public class PartyQueue extends ListActivity {
         String t = firebase.getName();
         System.out.println(t);
         //still just prints out "Playlists"
-        Firebase pl = firebase.child("");
+        //Firebase pl = firebase.child("");
         //String tra = pl.getName();
         //Log.d(t, t);
         //Log.d(tra, tra);
@@ -85,7 +86,7 @@ public class PartyQueue extends ListActivity {
         //Track t = new Track("")
         //Track t = dataSnapShot.getValue()
         //partylistQ.once('value', function(dataSnapShot));
-        partylistQ.addChildEventListener(new ChildEventListener() {
+        /*partylistQ.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot ds, String s) {
                 Track tr = new Track("b", "brad", "b", "b", "b");
@@ -117,7 +118,7 @@ public class PartyQueue extends ListActivity {
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
+        });*/
         
 
         /*if (savedInstanceState == null) {
@@ -128,9 +129,9 @@ public class PartyQueue extends ListActivity {
         //don't have to check for null rdio I don't think
         //that should be done in onPause() or onStart()
         //check to see if user exists. If so, then get username and pass
-        SharedPreferences user = getPreferences(MODE_PRIVATE);
-        accessToken = user.getString(PREF_ACCESSTOKEN, null);
-        accessTokenSecret = user.getString(PREF_ACCESSTOKENSECRET, null);
+        //SharedPreferences user = getPreferences(MODE_PRIVATE);
+        //accessToken = user.getString(PREF_ACCESSTOKEN, null);
+        //accessTokenSecret = user.getString(PREF_ACCESSTOKENSECRET, null);
 
         //create new rdio instance
         //rdio = new Rdio(appKey, appSecret, accessToken, accessTokenSecret, this, this);
@@ -148,7 +149,15 @@ public class PartyQueue extends ListActivity {
         super.onStart();
         final ListView listView = getListView();
 
-
+        playlistAdapter = new PlaylistAdapter(firebase.limit(50), this, R.layout.fragment_party_queue, "Playlist");
+        listView.setAdapter(playlistAdapter);
+        playlistAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                listView.setSelection(playlistAdapter.getCount() - 1);
+            }
+        });
 
     }
 

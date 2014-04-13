@@ -9,12 +9,14 @@ import java.util.Queue;
 public class Playlist {
     private String name;
     private String owner;
-    public Queue<Tracks> tracks;
+    //public Queue<Track> tracks;
 
-    public Playlist(String aName, String anOwner){
+    private Playlist(){};
+
+    Playlist(String aName, String anOwner){
         name = aName;
         owner = anOwner;
-        tracks = new LinkedList<Tracks>();
+        //tracks = new LinkedList<Track>();
     }
 
     public String getName() {return name;}
