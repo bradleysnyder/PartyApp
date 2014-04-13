@@ -23,7 +23,7 @@ public class PlaylistAdapter extends FirebaseListAdapter<Playlist>{
         String owner = playlist.getOwner();
         String name = playlist.getName();
         TextView artistText = (TextView)view.findViewById(R.id.name);
-        artistText.setText(name + "by ");
+        artistText.setText(name + " by ");
         // If the message was sent by this user, color it differently
         ((TextView)view.findViewById(R.id.owner)).setText(owner);
     }

@@ -9,8 +9,19 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="456dp"
         android:id="@android:id/list"
         android:layout_gravity="center_horizontal|top"
-        android:clickable="true" />
+        android:clickable="true"
+        android:smoothScrollbar="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Playlist"
+        android:id="@+id/button"
+        android:layout_gravity="center_horizontal|bottom"
+        android:clickable="true"
+        android:onClick="addPlaylist"/>
+
 </FrameLayout>

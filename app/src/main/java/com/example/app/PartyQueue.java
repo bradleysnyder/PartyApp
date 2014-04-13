@@ -1,5 +1,6 @@
 package com.example.app;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
 import android.media.MediaPlayer;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -24,14 +26,16 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.GenericTypeIndicator;
 import com.firebase.client.Query;
+import com.rdio.android.api.OAuth1WebViewActivity;
 import com.rdio.android.api.Rdio;
+import com.rdio.android.api.RdioListener;
 
 import java.io.Console;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class PartyQueue extends ListActivity {
+public class PartyQueue extends ListActivity{
 
     private static final String TAG = "PartyDJ";
 
@@ -61,20 +65,48 @@ public class PartyQueue extends ListActivity {
 
     private PlaylistAdapter playlistAdapter;
 
+    private Button button;
+
+    private class Listener implements RdioListener{
+
+        @Override
+        public void onRdioReadyForPlayback() {
+
+        }
+
+        @Override
+        public void onRdioUserPlayingElsewhere() {
+
+        }
+
+        @Override
+        public void onRdioAuthorised(String s, String s2) {
+            Log.i(TAG, "Application authorised, saving access token & secret.");
+            Log.d(TAG, "Access token: " + accessToken);
+            Log.d(TAG, "Access token secret: " + accessTokenSecret);
+
+            SharedPreferences settings = getPreferences(MODE_PRIVATE);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(PREF_ACCESSTOKEN, accessToken);
+            editor.putString(PREF_ACCESSTOKENSECRET, accessTokenSecret);
+            editor.commit();
+        }
+    }
+
+    private Listener listen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_party_queue);
-
         trackQueue = new LinkedList<Track>();
-
+        listen = new Listener();
         firebase = new Firebase(FIREBASE_URL).child("Playlists");
         //Query partylistQ = firebase.limit(100);
         //give us the first 100 playlists in firebase
         //we handle cases where new playlists are added as well as moved
         //System.out.println(partylistQ);
-
+        button = (Button) findViewById(R.id.button);
         String t = firebase.getName();
         System.out.println(t);
         //still just prints out "Playlists"
@@ -197,4 +229,39 @@ public class PartyQueue extends ListActivity {
         }
     }
 
+    public void addPlaylist(View view){
+        if(rdio == null){
+            instantiateRdio();
+        }
+        //rdio.apiCall("getPlaylists", );
+    }
+
+    public void instantiateRdio(){
+        if(rdio == null){
+            SharedPreferences settings = getPreferences(MODE_PRIVATE);
+            accessToken = settings.getString(PREF_ACCESSTOKEN, null);
+            accessTokenSecret = settings.getString(PREF_ACCESSTOKENSECRET, null);
+
+            rdio = new Rdio(appKey, appSecret, accessToken, accessTokenSecret, this, listen);
+
+            if (accessToken == null || accessTokenSecret == null) {
+                // If either one is null, reset both of them
+                accessToken = accessTokenSecret = null;
+                Intent myIntent = new Intent(PartyQueue.this,
+                        OAuth1WebViewActivity.class);
+                myIntent.putExtra(OAuth1WebViewActivity.EXTRA_CONSUMER_KEY, appKey);
+                myIntent.putExtra(OAuth1WebViewActivity.EXTRA_CONSUMER_SECRET, appSecret);
+                PartyQueue.this.startActivityForResult(myIntent, 1);
+
+            } else {
+                Log.d(TAG, "Found cached credentials:");
+                Log.d(TAG, "Access token: " + accessToken);
+                Log.d(TAG, "Access token secret: " + accessTokenSecret);
+            }
+
+        }
+    }
+
 }
+
+
