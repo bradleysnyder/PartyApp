@@ -1,7 +1,9 @@
 package com.example.app;
 
 import android.content.SharedPreferences;
+import android.database.DataSetObserver;
 import android.media.MediaPlayer;
+import android.app.ListActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -28,7 +31,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class PartyQueue extends ActionBarActivity {
+public class PartyQueue extends ListActivity {
 
     private static final String TAG = "PartyDJ";
 
@@ -74,9 +77,9 @@ public class PartyQueue extends ActionBarActivity {
         String t = firebase.getName();
         System.out.println(t);
         //still just prints out "Playlists"
-        //Firebase pl = firebase.child("Playlists/Tracks");
+        Firebase pl = firebase.child("");
         //String tra = pl.getName();
-        Log.d(t, t);
+        //Log.d(t, t);
         //Log.d(tra, tra);
 
         //Track t = new Track("")
@@ -141,6 +144,13 @@ public class PartyQueue extends ActionBarActivity {
 
     }
 
+    public void onStart(){
+        super.onStart();
+        final ListView listView = getListView();
+
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

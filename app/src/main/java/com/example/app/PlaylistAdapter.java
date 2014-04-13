@@ -12,7 +12,7 @@ import com.firebase.client.Query;
 public class PlaylistAdapter extends FirebaseListAdapter<Playlist>{
     private String playlistName;
 
-    public PlayListAdapter(Query ref, Activity activity, int layout, String username) {
+    public PlaylistAdapter(Query ref, Activity activity, int layout, String username) {
         super(ref, Playlist.class, layout, activity);
         this.playlistName = username;
     }
